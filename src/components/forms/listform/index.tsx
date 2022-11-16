@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
 import Card from "components/Card";
-import StyledInput from "components/StyledTextInput";
 import {
+  Box,
   FormControl,
-  Heading,
   Stack,
   Text,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
   Table,
   TableCaption,
   TableContainer,
@@ -20,10 +14,14 @@ import {
   Th,
   Thead,
   Tr,
-  Box,
+  Input,
+  FormLabel,
+  FormHelperText,
 } from "@chakra-ui/react";
+import StyledTextInput from "components/input/StyledTextInput";
+import StyledCheckBox from "components/input/StyledCheckBox";
 
-type InputDataType = string | number | boolean;
+export type InputDataType = string | number | boolean;
 
 export enum InputType {
   STRING,
@@ -40,113 +38,98 @@ interface FormData {
 }
 
 interface ListFormProps {
-  formLayout: InputInfo[];
+  formLayout: InputInfo;
   data?: FormData[];
 }
 
 export default function ListForm({ formLayout, data }: ListFormProps) {
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormData>({ ...formLayout });
 
-  const InputComponent = ({ key, value }: FormData): JSX.Element => {
-    const keyString = key as string;
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [keyString]: event.target.value,
-      }));
-    };
-    switch (value) {
-      case InputType.STRING:
-        return (
-          <StyledInput
-            label={keyString.toUpperCase()}
-            value={"formData[keyString]" as string}
-            handleChange={handleChange}
-          />
-        );
-      case InputType.NUMBER:
-        return (
-          <StyledInput
-            label={keyString.toUpperCase()}
-            value={"formData[keyString]" as string}
-            handleChange={handleChange}
-          />
-        );
-      case InputType.BOOLEAN:
-        return (
-          <StyledInput
-            label={keyString.toUpperCase()}
-            value={"formData[keyString]" as string}
-            handleChange={handleChange}
-          />
-        );
-      default:
-        break;
-    }
-    return <></>;
-  };
-
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   return (
-    <Card textAlign="center" margin="100px auto" width="50vw">
-      <Tabs isFitted variant="enclosed" colorScheme="orange">
-        <TabList mb="1em">
-          <Tab>
-            <Text fontSize="3xl">DETAILS</Text>
-          </Tab>
-          <Tab>
-            <Text fontSize="3xl">LIST</Text>
-          </Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <FormControl>
-              <Stack spacing={3}>
-                {Object.entries(formLayout).map(([key, value], index) => {
+    <Box display="flex" gap={8}>
+      <Card textAlign="center" flex="50%">
+        <FormControl>
+          <Stack spacing={4}>
+            {Object.entries(formData).map(([key, _], index) => {
+              const SetValue = (value: InputDataType) => {
+                setFormData((prevFormData) => ({
+                  ...prevFormData,
+                  [key]: value,
+                }));
+              };
+              switch (formLayout[key]) {
+                case InputType.STRING:
                   return (
-                    <Box key={`form_item_${index}`}>
-                      <InputComponent key={key} value={value} />
-                    </Box>
+                    <StyledTextInput
+                      value={formData[key] as string}
+                      setValue={SetValue}
+                      label={key}
+                    />
                   );
-                })}
-              </Stack>
-            </FormControl>
-          </TabPanel>
-          <TabPanel>
-            <TableContainer boxShadow="md" height={400} overflowY="scroll">
-              <Table variant="striped" colorScheme="gray" height={400}>
-                <TableCaption>
-                  Imperial to metric conversion factors
-                </TableCaption>
-                <Thead>
-                  <Tr>
-                    <Th>To convert</Th>
-                    <Th>into</Th>
-                    <Th isNumeric>multiply by</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {Array.from(Array(50)).map(() => (
-                    <Tr>
-                      <Td>inches</Td>
-                      <Td>millimetres (mm)</Td>
-                      <Td isNumeric>25.4</Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-                <Tfoot>
-                  <Tr>
-                    <Th>To convert</Th>
-                    <Th>into</Th>
-                    <Th isNumeric>multiply by</Th>
-                  </Tr>
-                </Tfoot>
-              </Table>
-            </TableContainer>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    </Card>
+                case InputType.NUMBER:
+                  break;
+                // return (
+                //   <StyledInput
+                //     key={`key_${key}`}
+                //     label={key.toUpperCase()}
+                //     value={"formData[keyString]" as string}
+                //     handleChange={handleChange}
+                //   />
+                // );
+                case InputType.BOOLEAN:
+                  return (
+                    <StyledCheckBox
+                      value={formData[key] as boolean}
+                      setValue={SetValue}
+                      label={key}
+                    />
+                  );
+                default:
+                  break;
+              }
+              return (
+                <>
+                  <p key={`key_${key}`}>INVALID</p>
+                </>
+              );
+            })}
+          </Stack>
+        </FormControl>
+      </Card>
+      <Card flex="50%">
+        <TableContainer boxShadow="md" height={400} overflowY="scroll">
+          <Table variant="striped" colorScheme="gray" height={400}>
+            <TableCaption>Imperial to metric conversion factors</TableCaption>
+            <Thead>
+              <Tr>
+                <Th>To convert</Th>
+                <Th>into</Th>
+                <Th isNumeric>multiply by</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {Array.from(Array(50)).map(() => (
+                <Tr>
+                  <Td>inches</Td>
+                  <Td>millimetres (mm)</Td>
+                  <Td isNumeric>25.4</Td>
+                </Tr>
+              ))}
+            </Tbody>
+            <Tfoot>
+              <Tr>
+                <Th>To convert</Th>
+                <Th>into</Th>
+                <Th isNumeric>multiply by</Th>
+              </Tr>
+            </Tfoot>
+          </Table>
+        </TableContainer>
+      </Card>
+    </Box>
   );
 }

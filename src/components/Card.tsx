@@ -1,28 +1,20 @@
 import { Box } from "@chakra-ui/react";
 
 interface CardProps {
-  size?: "sm" | "md" | "lg";
   children?: React.ReactNode;
   [x: string]: any;
 }
 
-export default function Card({ size, children, ...rest }: CardProps) {
-  let dimensions = "25vw";
-  if (size === "sm") dimensions = "10vw";
-  else if (size === "lg") dimensions = "40vw";
-
+export default function Card({ children, ...rest }: CardProps) {
   return (
     <Box
-      bgColor="orange"
-      borderRadius={15}
-      padding={3}
-      width={dimensions}
-      boxShadow="xl"
+      bgColor="white"
+      padding={4}
+      borderRadius={20}
+      boxShadow="rgba(0, 0, 0, 0.15) 0px 5px 15px 0px"
       {...rest}
     >
-      <Box bgColor="white" padding={5} borderRadius={15} boxShadow="lg">
-        {children}
-      </Box>
+      {children}
     </Box>
   );
 }
