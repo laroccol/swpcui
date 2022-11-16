@@ -14,9 +14,6 @@ import {
   Th,
   Thead,
   Tr,
-  Input,
-  FormLabel,
-  FormHelperText,
 } from "@chakra-ui/react";
 import StyledTextInput from "components/input/StyledTextInput";
 import StyledCheckBox from "components/input/StyledCheckBox";
@@ -50,8 +47,14 @@ export default function ListForm({ formLayout, data }: ListFormProps) {
   }, [formData]);
 
   return (
-    <Box display="flex" gap={8}>
-      <Card textAlign="center" flex="50%">
+    <Box display="flex" alignItems="flex-start" gap={8}>
+      <Card
+        textAlign="center"
+        flex="50%"
+        alignContent="start"
+        maxHeight="70vh"
+        overflowY="scroll"
+      >
         <FormControl>
           <Stack spacing={4}>
             {Object.entries(formData).map(([key, _], index) => {
@@ -100,9 +103,9 @@ export default function ListForm({ formLayout, data }: ListFormProps) {
           </Stack>
         </FormControl>
       </Card>
-      <Card flex="50%">
-        <TableContainer boxShadow="md" height={400} overflowY="scroll">
-          <Table variant="striped" colorScheme="gray" height={400}>
+      <Card flex="50%" maxHeight="70vh" overflowY="scroll">
+        <TableContainer boxShadow="md">
+          <Table variant="striped" colorScheme="gray">
             <TableCaption>Imperial to metric conversion factors</TableCaption>
             <Thead>
               <Tr>
